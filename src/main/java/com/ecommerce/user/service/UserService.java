@@ -73,7 +73,7 @@ public class UserService {
 
         return AuthResponse.builder()
                 .token(token)
-                .expiresIn(jwtService.getExpirationMs())
+                .expiresIn(jwtService.getExpirationMs() / 1000) // convert ms → seconds
                 .username(user.getUsername())
                 .role(user.getRole().name())
                 .build();

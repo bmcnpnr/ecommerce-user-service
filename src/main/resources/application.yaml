@@ -6,8 +6,8 @@ spring:
     name: user-service
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/userdb}
-    username: ${DB_USERNAME:ecommerce}
-    password: ${DB_PASSWORD:ecommerce}
+    username: ${DB_USERNAME:useruser}
+    password: ${DB_PASSWORD:userpass}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -32,7 +32,7 @@ eureka:
     prefer-ip-address: true
 
 jwt:
-  secret: ${JWT_SECRET:dev-secret-key-at-least-256-bits-long-abcdefghijklmnopqrstuvwxyz123456}
+  secret: ${JWT_SECRET:myVerySecretJwtKeyThatIsAtLeast32CharactersLongForHS256}
   expiration-ms: 3600000
 
 management:
@@ -44,7 +44,7 @@ management:
     health:
       show-details: always
     prometheus:
-      enabled: true
+      access: unrestricted
   metrics:
     tags:
       application: ${spring.application.name}
@@ -57,9 +57,15 @@ management:
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
-  otlp:
+  opentelemetry:
     tracing:
-      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://tempo:4318}/v1/traces
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://tempo:4318}/v1/traces
+  otlp:
+    metrics:
+      export:
+        enabled: false
 
 springdoc:
   api-docs:
