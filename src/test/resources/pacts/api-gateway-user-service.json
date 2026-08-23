@@ -1,0 +1,192 @@
+{
+  "consumer": {
+    "name": "api-gateway"
+  },
+  "interactions": [
+    {
+      "comments": {
+        "testname": "com.ecommerce.gateway.contract.UserServiceJwtConsumerPactTest.tokenShapedLikeUserServicesIsAcceptedAndMappedToIdentityHeaders(List)"
+      },
+      "contents": {
+        "content": {
+          "header": {
+            "alg": "HS256"
+          },
+          "payload": {
+            "exp": 4102444800,
+            "iat": 1787000000,
+            "role": "CUSTOMER",
+            "sub": "alice",
+            "userId": 42
+          }
+        },
+        "contentType": "application/json",
+        "encoded": false
+      },
+      "description": "a JWT issued to alice at login",
+      "key": "5b40b473",
+      "matchingRules": {
+        "body": {
+          "$.header.alg": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "regex",
+                "regex": "HS(256|384|512)"
+              }
+            ]
+          },
+          "$.payload.exp": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "integer"
+              }
+            ]
+          },
+          "$.payload.iat": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "integer"
+              }
+            ]
+          },
+          "$.payload.role": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.sub": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.userId": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "integer"
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "contentType": "application/json"
+      },
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "user alice exists"
+        }
+      ],
+      "type": "Asynchronous/Messages"
+    },
+    {
+      "comments": {
+        "testname": "com.ecommerce.gateway.contract.UserServiceConsumerPactTest.authenticatedProfileRequest_isForwardedWithIdentityHeaders()",
+        "text": [
+
+        ]
+      },
+      "description": "a profile request forwarded for the authenticated user alice",
+      "key": "f99d2cd6",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "user alice exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "X-User-Id": [
+            "42"
+          ],
+          "X-User-Role": [
+            "CUSTOMER"
+          ],
+          "X-Username": [
+            "alice"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/v1/users/me"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "email": "alice@example.com",
+            "id": 42,
+            "role": "CUSTOMER",
+            "status": "ACTIVE",
+            "username": "alice"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.email": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.role": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.status": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.7.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "user-service"
+  }
+}
